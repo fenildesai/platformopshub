@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+            <FluentTypography Typo="Typography.Body">Hello, @context.User.Identity?.Name</FluentTypography>
+            <FluentButton Appearance="Appearance.Stealth" OnClick="BeginLogout">Logout</FluentButton>
+        </FluentStack>
+    </Authorized>
+    <NotAuthorized>
+        <FluentAnchor Href="Account/Login" Appearance="Appearance.Accent">Login</FluentAnchor>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void BeginLogout()
+    {
+        // Logout logic implementation (standard ASP.NET Core Identity logout)
+    }
+}

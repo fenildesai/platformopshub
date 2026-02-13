@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<FluentHeader Style="height: 50px; background-color: var(--accent-fill-rest); color: white; flex-shrink: 0;">
+    <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="width: 100%; height: 50px; padding: 0 20px;">
+        <FluentIcon Value="@(new Icons.Filled.Size24.Stack())" Color="Color.Fill" />
+        <FluentSpacer Width="10" />
+        <FluentTypography Typo="Typography.H3" Style="margin: 0; font-weight: 600;">PlatformOps Hub</FluentTypography>
+        <FluentSpacer />
+        <LoginDisplay />
+    </FluentStack>
+</FluentHeader>
+
+<div style="display: flex; flex-direction: row; height: calc(100vh - 50px); width: 100%; overflow: hidden;">
+    <FluentNavMenu Width="250" Title="PlatformOps Navigation" Collapsible="true" Style="height: 100%;">
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.Home())" Href="/" Match="NavLinkMatch.All">Dashboard</FluentNavLink>
+        <FluentNavGroup Title="Teams" Icon="@(new Icons.Regular.Size20.People())">
+            <FluentNavLink Href="/service">Service Team</FluentNavLink>
+            <FluentNavLink Href="/change">Change Team</FluentNavLink>
+            <FluentNavLink Href="/dba">DBA Team</FluentNavLink>
+        </FluentNavGroup>
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.Target())" Href="/epics">Epics</FluentNavLink>
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.Pulse())" Href="/activities">Activities</FluentNavLink>
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.Shield())" Href="/code-quality">Code Quality</FluentNavLink>
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.Book())" Href="/learning">Learning & Growth</FluentNavLink>
+        <FluentNavLink Icon="@(new Icons.Regular.Size20.PeopleCommunity())" Href="/team">Who We Are</FluentNavLink>
+        <FluentNavGroup Title="Admin" Icon="@(new Icons.Regular.Size20.Settings())">
+            <FluentNavLink Href="/admin/users">Users</FluentNavLink>
+            <FluentNavLink Href="/admin/integrations">Integrations</FluentNavLink>
+            <FluentNavLink Href="/admin/newsletters">Newsletters</FluentNavLink>
+        </FluentNavGroup>
+    </FluentNavMenu>
+
+    <main style="flex: 1; height: 100%; overflow-y: auto; background-color: var(--neutral-layer-2); padding: 24px;">
+        @Body
+    </main>
+</div>
+
+<FluentToastProvider />
+<FluentDialogProvider />
+<FluentTooltipProvider />
+
+<style>
+    :root {
+        --accent-fill-rest: #0062E6; /* PlatformOps Brand Color */
+    }
+</style>

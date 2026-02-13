@@ -1,0 +1,111 @@
+@page "/code-quality"
+@using MediatR
+@using Microsoft.EntityFrameworkCore
+@using PlatformOpsHub.Infrastructure.Data
+@inject ApplicationDbContext Context
+
+<FluentTypography Typo="Typography.H2">Code Quality & Security</FluentTypography>
+<FluentTypography Typo="Typography.Body">Aggregated metrics from SonarQube and Checkmarx.</FluentTypography>
+
+<FluentGrid Style="margin-top: 20px;" Spacing="3">
+    <!-- SonarQube Summary -->
+    <FluentGridItem xs="12" md="6">
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+                <FluentIcon Value="@(new Icons.Filled.Size24.Shield())" Color="Color.Accent" />
+                <FluentTypography Typo="Typography.H4">SonarQube Trends</FluentTypography>
+            </FluentStack>
+            <div style="margin-top: 15px;">
+                <FluentGrid>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3">@sonarBugs</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Bugs</FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3">@sonarVulns</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Vulnerabilities</FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3">@avgCoverage.ToString("F1")%</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Avg Coverage</FluentTypography>
+                    </FluentGridItem>
+                </FluentGrid>
+            </div>
+        </FluentCard>
+    </FluentGridItem>
+
+    <!-- Checkmarx Summary -->
+    <FluentGridItem xs="12" md="6">
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+                <FluentIcon Value="@(new Icons.Filled.Size24.LockClosed())" Color="Color.Error" />
+                <FluentTypography Typo="Typography.H4">Checkmarx Security</FluentTypography>
+            </FluentStack>
+            <div style="margin-top: 15px;">
+                <FluentGrid>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3" Style="color: red;">@cxCriticals</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Criticals</FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3" Style="color: orange;">@cxHighs</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Highs</FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.H3">@cxMediums</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Mediums</FluentTypography>
+                    </FluentGridItem>
+                </FluentGrid>
+            </div>
+        </FluentCard>
+    </FluentGridItem>
+
+    <!-- Project Details Table -->
+    <FluentGridItem xs="12">
+        <FluentCard>
+            <FluentTypography Typo="Typography.H4">Project Breakdown</FluentTypography>
+            <FluentDataGrid Items="@snapshots" Pagination="@pagination">
+                <PropertyColumn Property="@(s => s.ProjectKey)" Title="Project" Sortable="true" />
+                <PropertyColumn Property="@(s => s.Source)" Title="Source" />
+                <TemplateColumn Title="Bugs">
+                    <FluentBadge Appearance="@(context.Bugs > 5 ? Appearance.Accent : Appearance.Neutral)">@context.Bugs</FluentBadge>
+                </TemplateColumn>
+                <PropertyColumn Property="@(s => s.Vulns)" Title="Vulns" />
+                <PropertyColumn Property="@(s => s.CoveragePct)" Title="Coverage" Format="P1" />
+                <PropertyColumn Property="@(s => s.SnapshotWeekStart)" Title="As Of" Format="dd/MM/yyyy" />
+            </FluentDataGrid>
+            <FluentPaginator State="@pagination" />
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    private int sonarBugs;
+    private int sonarVulns;
+    private decimal avgCoverage;
+    private int cxCriticals;
+    private int cxHighs;
+    private int cxMediums;
+    private IQueryable<PlatformOpsHub.Domain.Entities.CodeQualitySnapshot>? snapshots;
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var latestSnapshots = await Context.CodeQualitySnapshots
+            .GroupBy(s => s.ProjectKey)
+            .Select(g => g.OrderByDescending(s => s.SnapshotWeekStart).First())
+            .ToListAsync();
+
+        sonarBugs = latestSnapshots.Where(s => s.Source == CodeQualitySource.SonarQube).Sum(s => s.Bugs);
+        sonarVulns = latestSnapshots.Where(s => s.Source == CodeQualitySource.SonarQube).Sum(s => s.Vulns);
+        avgCoverage = latestSnapshots.Where(s => s.Source == CodeQualitySource.SonarQube).Any() 
+            ? latestSnapshots.Where(s => s.Source == CodeQualitySource.SonarQube).Average(s => s.CoveragePct ?? 0) 
+            : 0;
+
+        cxCriticals = latestSnapshots.Where(s => s.Source == CodeQualitySource.Checkmarx).Sum(s => s.Criticals);
+        cxHighs = latestSnapshots.Where(s => s.Source == CodeQualitySource.Checkmarx).Sum(s => s.Highs);
+        cxMediums = latestSnapshots.Where(s => s.Source == CodeQualitySource.Checkmarx).Sum(s => s.Mediums);
+
+        snapshots = Context.CodeQualitySnapshots.OrderByDescending(s => s.SnapshotWeekStart).AsQueryable();
+    }
+}

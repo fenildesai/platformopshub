@@ -1,0 +1,47 @@
+@page "/admin/users"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Admin")]
+@inject UserManager<IdentityUser> UserManager
+
+<PageTitle>User Management - PlatformOps Hub</PageTitle>
+
+<FluentTypography Typo="Typography.H2">User Management</FluentTypography>
+<FluentTypography Typo="Typography.Body">Manage application users and their roles.</FluentTypography>
+
+<FluentStack Orientation="Orientation.Horizontal" Style="margin: 20px 0;">
+    <FluentButton IconStart="@(new Icons.Regular.Size16.PersonAdd())" Appearance="Appearance.Accent">Invite User</FluentButton>
+    <FluentSpacer />
+    <FluentSearch Placeholder="Search users..." Style="width: 300px;" />
+</FluentStack>
+
+@if (userList == null)
+{
+    <FluentProgressRing />
+}
+else
+{
+    @* Using a simple list to avoid DataGrid build issues while triaging *@
+    <FluentStack Orientation="Orientation.Vertical" Spacing="2">
+        @foreach (var user in userList)
+        {
+            <FluentCard Style="padding: 10px;">
+                <FluentStack Orientation="Orientation.Horizontal">
+                    <FluentTypography Typo="Typography.Body"><b>@user.UserName</b></FluentTypography>
+                    <FluentSpacer />
+                    <FluentTypography Typo="Typography.Caption">@user.Email</FluentTypography>
+                </FluentStack>
+            </FluentCard>
+        }
+    </FluentStack>
+}
+
+@code {
+    private List<IdentityUser>? userList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userList = await UserManager.Users.ToListAsync();
+    }
+}

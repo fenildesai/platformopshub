@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Domain", "src\PlatformOpsHub.Domain\PlatformOpsHub.Domain.csproj", "{078B3D3B-46AA-4808-9966-0F751D5BEDB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Infrastructure", "src\PlatformOpsHub.Infrastructure\PlatformOpsHub.Infrastructure.csproj", "{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Application", "src\PlatformOpsHub.Application\PlatformOpsHub.Application.csproj", "{5291CB50-E110-49A9-8B86-5C2D754502EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Integrations", "src\PlatformOpsHub.Integrations\PlatformOpsHub.Integrations.csproj", "{8E06A13C-BB46-4DB0-9609-3D9E95C8F548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Background", "src\PlatformOpsHub.Background\PlatformOpsHub.Background.csproj", "{0BD1868D-4756-4E34-AAF0-DD4036AA5A21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Web", "src\PlatformOpsHub.Web\PlatformOpsHub.Web.csproj", "{D59D1AE2-279A-42E8-9F94-B0CBFE903866}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F833F7B3-D049-4B3E-AE97-8F69CBF4CC6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Tests.Unit", "tests\PlatformOpsHub.Tests.Unit\PlatformOpsHub.Tests.Unit.csproj", "{33307A2B-869D-4E25-9602-FA61193B9D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Tests.Integration", "tests\PlatformOpsHub.Tests.Integration\PlatformOpsHub.Tests.Integration.csproj", "{4A86008D-5235-4EEF-A34C-11881858F639}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformOpsHub.Tests.E2E", "tests\PlatformOpsHub.Tests.E2E\PlatformOpsHub.Tests.E2E.csproj", "{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{078B3D3B-46AA-4808-9966-0F751D5BEDB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{078B3D3B-46AA-4808-9966-0F751D5BEDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{078B3D3B-46AA-4808-9966-0F751D5BEDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{078B3D3B-46AA-4808-9966-0F751D5BEDB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5291CB50-E110-49A9-8B86-5C2D754502EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5291CB50-E110-49A9-8B86-5C2D754502EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5291CB50-E110-49A9-8B86-5C2D754502EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5291CB50-E110-49A9-8B86-5C2D754502EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E06A13C-BB46-4DB0-9609-3D9E95C8F548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E06A13C-BB46-4DB0-9609-3D9E95C8F548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E06A13C-BB46-4DB0-9609-3D9E95C8F548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E06A13C-BB46-4DB0-9609-3D9E95C8F548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD1868D-4756-4E34-AAF0-DD4036AA5A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD1868D-4756-4E34-AAF0-DD4036AA5A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD1868D-4756-4E34-AAF0-DD4036AA5A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD1868D-4756-4E34-AAF0-DD4036AA5A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D59D1AE2-279A-42E8-9F94-B0CBFE903866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59D1AE2-279A-42E8-9F94-B0CBFE903866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D59D1AE2-279A-42E8-9F94-B0CBFE903866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D59D1AE2-279A-42E8-9F94-B0CBFE903866}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33307A2B-869D-4E25-9602-FA61193B9D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33307A2B-869D-4E25-9602-FA61193B9D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33307A2B-869D-4E25-9602-FA61193B9D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33307A2B-869D-4E25-9602-FA61193B9D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A86008D-5235-4EEF-A34C-11881858F639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A86008D-5235-4EEF-A34C-11881858F639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A86008D-5235-4EEF-A34C-11881858F639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A86008D-5235-4EEF-A34C-11881858F639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{078B3D3B-46AA-4808-9966-0F751D5BEDB5} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{ACE54B30-E0A7-41F8-A215-D4A1D9D3870A} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{5291CB50-E110-49A9-8B86-5C2D754502EF} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{8E06A13C-BB46-4DB0-9609-3D9E95C8F548} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{0BD1868D-4756-4E34-AAF0-DD4036AA5A21} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{D59D1AE2-279A-42E8-9F94-B0CBFE903866} = {4FAB3BDF-EB00-4CDE-B2B2-EF776B462B9C}
+		{33307A2B-869D-4E25-9602-FA61193B9D56} = {F833F7B3-D049-4B3E-AE97-8F69CBF4CC6F}
+		{4A86008D-5235-4EEF-A34C-11881858F639} = {F833F7B3-D049-4B3E-AE97-8F69CBF4CC6F}
+		{7461E93E-E993-42DC-B7C1-CD1DC03A1DC7} = {F833F7B3-D049-4B3E-AE97-8F69CBF4CC6F}
+	EndGlobalSection
+EndGlobal

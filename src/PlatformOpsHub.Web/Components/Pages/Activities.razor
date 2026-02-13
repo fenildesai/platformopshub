@@ -1,0 +1,51 @@
+@page "/activities"
+@using MediatR
+@using Microsoft.EntityFrameworkCore
+@using PlatformOpsHub.Infrastructure.Data
+@inject ApplicationDbContext Context
+
+<PageTitle>Activities - PlatformOps Hub</PageTitle>
+
+<FluentTypography Typo="Typography.H2">Team Activities</FluentTypography>
+<FluentTypography Typo="Typography.Body">Recent activities and operational tasks across all teams.</FluentTypography>
+
+<FluentStack Orientation="Orientation.Horizontal" Style="margin: 20px 0;">
+    <FluentButton IconStart="@(new Icons.Regular.Size16.Add())" Appearance="Appearance.Accent">Log Activity</FluentButton>
+    <FluentSpacer />
+    <FluentSearch Placeholder="Filter activities..." Style="width: 300px;" />
+</FluentStack>
+
+<FluentDataGrid TGridItem="PlatformOpsHub.Domain.Entities.Activity" Items="@activities" ResizableColumns="true" Pagination="@pagination">
+    <PropertyColumn Property="@(p => p.Id)" Title="ID" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Title)" Title="Activity" Sortable="true" />
+    <TemplateColumn Title="Team">
+        <FluentBadge Appearance="Appearance.Neutral">@context.Team.Name</FluentBadge>
+    </TemplateColumn>
+    <PropertyColumn Property="@(p => p.CreatedAt)" Title="Date" Format="dd/MM/yyyy HH:mm" Sortable="true" />
+    <TemplateColumn Title="KPIs">
+        @foreach (var kpiValue in context.KpiValues)
+        {
+            <FluentBadge Appearance="Appearance.Accent" Style="margin-right: 4px;">@kpiValue.Kpi.Name: @(kpiValue.NumericValue?.ToString() ?? kpiValue.BoolValue?.ToString() ?? "N/A")</FluentBadge>
+        }
+    </TemplateColumn>
+    <TemplateColumn Title="Actions">
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Open())" Appearance="Appearance.Stealth" />
+    </TemplateColumn>
+</FluentDataGrid>
+
+<FluentPaginator State="@pagination" />
+
+@code {
+    private IQueryable<PlatformOpsHub.Domain.Entities.Activity>? activities;
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    protected override void OnInitialized()
+    {
+        activities = Context.Activities
+            .Include(a => a.Team)
+            .Include(a => a.KpiValues)
+            .ThenInclude(kv => kv.Kpi)
+            .OrderByDescending(a => a.CreatedAt)
+            .AsQueryable();
+    }
+}

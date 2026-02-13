@@ -1,0 +1,127 @@
+﻿@page "/"
+@using MediatR
+@using PlatformOpsHub.Application.Features.Dashboard.Queries
+@using PlatformOpsHub.Application.DTOs
+@inject IMediator Mediator
+
+<PageTitle>Dashboard - PlatformOps Hub</PageTitle>
+
+<FluentTypography Typo="Typography.H2">Operations Dashboard</FluentTypography>
+<FluentTypography Typo="Typography.Body">Real-time overview of PlatformOps activities and KPIs.</FluentTypography>
+
+<FluentGrid Style="margin-top: 20px;" Spacing="3">
+    @if (stats == null)
+    {
+        <FluentProgressRing Style="width: 50px; height: 50px;" />
+    }
+    else
+    {
+        <!-- Epic Stats -->
+        <FluentGridItem xs="12" sm="4" md="3">
+            <FluentCard Style="background-color: #f0f7ff;">
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentTypography Typo="Typography.H5">Epics Status</FluentTypography>
+                    <FluentHorizontalScroll>
+                        <FluentBadge Appearance="Appearance.Neutral">@stats.BacklogEpics Backlog</FluentBadge>
+                        <FluentBadge Appearance="Appearance.Accent">@stats.InProgressEpics In Progress</FluentBadge>
+                        <FluentBadge Appearance="Appearance.Accent">@stats.DoneEpics Done</FluentBadge>
+                    </FluentHorizontalScroll>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- Deployment Stats -->
+        <FluentGridItem xs="12" sm="4" md="3">
+            <FluentCard>
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentTypography Typo="Typography.H5">Deployments (Weekly)</FluentTypography>
+                    <FluentTypography Typo="Typography.H3">@stats.DeploymentsThisWeek</FluentTypography>
+                    <FluentTypography Typo="Typography.Body">Regression Pass: @stats.NightlyRegressionPassRate.ToString("F1")%</FluentTypography>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- Pipeline Health -->
+        <FluentGridItem xs="12" sm="4" md="3">
+            <FluentCard>
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentTypography Typo="Typography.H5">Pipeline Health</FluentTypography>
+                    <FluentTypography Typo="Typography.H3" Style="color: green;">@stats.PipelineHealthPercentage%</FluentTypography>
+                    <FluentProgress Min="0" Max="100" Value="@((int)stats.PipelineHealthPercentage)" />
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- Cost vs Target -->
+        <FluentGridItem xs="12" sm="4" md="3">
+            <FluentCard Style="@(stats.CostVariance >= 0 ? "border-left: 5px solid green;" : "border-left: 5px solid red;")">
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentTypography Typo="Typography.H5">Cost vs Target (2026)</FluentTypography>
+                    <FluentTypography Typo="Typography.H3">£@stats.CostYTD.ToString("N0") / £@stats.AnnualCostTarget.ToString("N0")</FluentTypography>
+                    <FluentTypography Typo="Typography.Body">Variance: £@stats.CostVariance.ToString("N0")</FluentTypography>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- Code Quality -->
+        <FluentGridItem xs="12" sm="6">
+            <FluentCard>
+                <FluentTypography Typo="Typography.H5">Code Quality & Security</FluentTypography>
+                <FluentStack Orientation="Orientation.Horizontal" Spacing="4">
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentTypography Typo="Typography.H4" Color="Color.Error">@stats.NewBugsCount</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">New Bugs</FluentTypography>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentTypography Typo="Typography.H4" Color="Color.Warning">@stats.NewVulnerabilitiesCount</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Vulnerabilities</FluentTypography>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentTypography Typo="Typography.H4">@stats.AverageCodeCoverage.ToString("F1")%</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Coverage</FluentTypography>
+                    </FluentStack>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- DORA Metrics Summary -->
+        <FluentGridItem xs="12" sm="6">
+            <FluentCard>
+                <FluentTypography Typo="Typography.H5">DORA Metrics</FluentTypography>
+                <FluentGrid Spacing="2">
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.Body">MTTR: <b>@stats.MeanTimeToRecoverHours h</b></FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.Body">Lead Time: <b>@stats.LeadTimeDays d</b></FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentTypography Typo="Typography.Body">CFR: <b>@stats.ChangeFailureRatePercentage%</b></FluentTypography>
+                    </FluentGridItem>
+                </FluentGrid>
+            </FluentCard>
+        </FluentGridItem>
+
+        <!-- Quick Insights (AI) -->
+        <FluentGridItem xs="12">
+            <FluentCard Appearance="Appearance.Filled">
+                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+                    <FluentIcon Value="@(new Icons.Filled.Size24.Lightbulb())" Color="Color.Warning" />
+                    <FluentTypography Typo="Typography.H6">AI Summary:</FluentTypography>
+                    <FluentTypography Typo="Typography.Body">
+                        Build times are down 15% this week. Cost is trending well against the 2026 target. Recommended focus: 2 critical security issues in platform-web.
+                    </FluentTypography>
+                </FluentStack>
+            </FluentCard>
+        </FluentGridItem>
+    }
+</FluentGrid>
+
+@code {
+    private DashboardStatsDto? stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stats = await Mediator.Send(new GetDashboardStatsQuery());
+    }
+}

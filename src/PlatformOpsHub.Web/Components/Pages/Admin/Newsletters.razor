@@ -1,0 +1,49 @@
+@page "/admin/newsletters"
+@using Microsoft.AspNetCore.Authorization
+@using PlatformOpsHub.Domain.Entities
+@using PlatformOpsHub.Domain.Enums
+@using PlatformOpsHub.Infrastructure.Data
+@using Microsoft.EntityFrameworkCore
+@attribute [Authorize(Roles = "Admin,Manager")]
+@inject ApplicationDbContext Context
+
+<PageTitle>Newsletters - PlatformOps Hub</PageTitle>
+
+<FluentTypography Typo="Typography.H2">Newsletters</FluentTypography>
+<FluentTypography Typo="Typography.Body">Manage and publish internal PlatformOps newsletters.</FluentTypography>
+
+<FluentStack Orientation="Orientation.Horizontal" Style="margin: 20px 0;">
+    <FluentButton IconStart="@(new Icons.Regular.Size20.Flash())" Appearance="Appearance.Accent">AI Generate Draft</FluentButton>
+    <FluentSpacer />
+    <FluentSearch Placeholder="Search newsletters..." Style="width: 300px;" />
+</FluentStack>
+
+<FluentDataGrid TGridItem="Newsletter" Items="@newsletters" ResizableColumns="true">
+    <TemplateColumn Title="Period" Sortable="true">
+        @context.Period
+    </TemplateColumn>
+    <TemplateColumn Title="Date Range">
+        @context.RangeStart.ToString("d") - @context.RangeEnd.ToString("d")
+    </TemplateColumn>
+    <TemplateColumn Title="Status">
+        <FluentBadge Appearance="@(context.PublishedAt.HasValue ? Appearance.Accent : Appearance.Neutral)">
+            @(context.PublishedAt.HasValue ? "Published" : "Draft")
+        </FluentBadge>
+    </TemplateColumn>
+    <TemplateColumn Title="Created" Sortable="true">
+        @context.CreatedAt.ToString("dd/MM/yyyy")
+    </TemplateColumn>
+    <TemplateColumn Title="Actions">
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Stealth" />
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Send())" Appearance="Appearance.Stealth" />
+    </TemplateColumn>
+</FluentDataGrid>
+
+@code {
+    private IQueryable<Newsletter>? newsletters;
+
+    protected override void OnInitialized()
+    {
+        newsletters = Context.Newsletters.OrderByDescending(n => n.CreatedAt).AsQueryable();
+    }
+}

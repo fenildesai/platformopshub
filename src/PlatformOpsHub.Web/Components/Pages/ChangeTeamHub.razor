@@ -1,0 +1,107 @@
+@page "/change"
+@using MediatR
+@using Microsoft.EntityFrameworkCore
+@using PlatformOpsHub.Infrastructure.Data
+@inject ApplicationDbContext Context
+
+<FluentTypography Typo="Typography.H2">Change Team Hub</FluentTypography>
+<FluentTypography Typo="Typography.Body">Cost optimization, pipeline enhancements, and tech-debt reduction.</FluentTypography>
+
+<FluentGrid Style="margin-top: 20px;" Spacing="3">
+    <!-- 2026 Cost Target Card -->
+    <FluentGridItem xs="12" md="6">
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTypography Typo="Typography.H4">2026 Cost Tracking</FluentTypography>
+                <FluentTypography Typo="Typography.Body">Annual Target: <b>£350,000</b></FluentTypography>
+                
+                @if (costTarget != null)
+                {
+                    <FluentStack Orientation="Orientation.Horizontal">
+                        <FluentStack Orientation="Orientation.Vertical">
+                            <FluentTypography Typo="Typography.H3">£@mtdCost.ToString("N0")</FluentTypography>
+                            <FluentTypography Typo="Typography.Caption">MTD Actual</FluentTypography>
+                        </FluentStack>
+                        <FluentSpacer />
+                        <FluentStack Orientation="Orientation.Vertical">
+                            <FluentTypography Typo="Typography.H4" Style="color: orange;">£@costTarget.MonthlyTarget.ToString("N0")</FluentTypography>
+                            <FluentTypography Typo="Typography.Caption">Monthly Target</FluentTypography>
+                        </FluentStack>
+                    </FluentStack>
+
+                    <FluentProgress Min="0" Max="@((int)costTarget.MonthlyTarget)" Value="@((int)mtdCost)" 
+                                    Color="@(mtdCost > costTarget.MonthlyTarget ? "var(--error)" : "var(--success)")" />
+                    
+                    <FluentTypography Typo="Typography.Body" Style="margin-top: 10px;">
+                        @(mtdCost <= costTarget.MonthlyTarget ? "✅ On track for this month." : "⚠️ Over target! Optimization required.")
+                    </FluentTypography>
+                }
+            </FluentStack>
+        </FluentCard>
+    </FluentGridItem>
+
+    <!-- Tech Debt & Pipeline Optimization -->
+    <FluentGridItem xs="12" md="6">
+        <FluentCard>
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTypography Typo="Typography.H4">Pipeline Optimization</FluentTypography>
+                <FluentGrid>
+                    <FluentGridItem xs="6">
+                        <FluentTypography Typo="Typography.H3">@optimizedCount</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Optimized Runs</FluentTypography>
+                    </FluentGridItem>
+                    <FluentGridItem xs="6">
+                        <FluentTypography Typo="Typography.H3">@avgDuration s</FluentTypography>
+                        <FluentTypography Typo="Typography.Caption">Avg Build Time</FluentTypography>
+                    </FluentGridItem>
+                </FluentGrid>
+                <div style="margin-top: 10px;">
+                    <FluentBadge Appearance="Appearance.Accent">Mediation Required: 2</FluentBadge>
+                    <FluentBadge Appearance="Appearance.Neutral">Tech Debt Items: 12</FluentBadge>
+                </div>
+            </FluentStack>
+        </FluentCard>
+    </FluentGridItem>
+
+    <!-- GenAI Initiatives List -->
+    <FluentGridItem xs="12">
+        <FluentCard>
+            <FluentTypography Typo="Typography.H4">GenAI Initiatives</FluentTypography>
+            <FluentDataGrid Items="@genAiActivities">
+                <PropertyColumn Property="@(a => a.Title)" Title="Initiative" />
+                <TemplateColumn Title="Status">
+                    <FluentBadge Appearance="Appearance.Accent">@context.Status</FluentBadge>
+                </TemplateColumn>
+                <PropertyColumn Property="@(a => a.DueAt)" Title="Due" Format="dd/MM/yyyy" />
+            </FluentDataGrid>
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    private decimal mtdCost;
+    private PlatformOpsHub.Domain.Entities.CostTarget? costTarget;
+    private int optimizedCount;
+    private double avgDuration;
+    private IQueryable<PlatformOpsHub.Domain.Entities.Activity>? genAiActivities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        costTarget = await Context.CostTargets.FirstOrDefaultAsync(ct => ct.Year == 2026);
+        
+        var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        mtdCost = (await Context.CostActuals
+            .Where(ca => ca.Date >= startOfMonth)
+            .Select(ca => ca.Amount)
+            .ToListAsync())
+            .Sum();
+
+        optimizedCount = await Context.PipelineRuns.CountAsync(r => r.IsOptimizedFlag);
+        avgDuration = await Context.PipelineRuns.AverageAsync(r => (double?)r.DurationSeconds) ?? 0;
+
+        genAiActivities = Context.Activities
+            .Include(a => a.Team)
+            .Where(a => a.Team.Type == TeamType.Change && a.Tags != null && a.Tags.Contains("GenAI"))
+            .AsQueryable();
+    }
+}

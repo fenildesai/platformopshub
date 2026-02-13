@@ -1,0 +1,50 @@
+@page "/epics"
+@using MediatR
+@using Microsoft.EntityFrameworkCore
+@using PlatformOpsHub.Infrastructure.Data
+@inject ApplicationDbContext Context
+
+<FluentTypography Typo="Typography.H2">Epics Portfolio</FluentTypography>
+<FluentTypography Typo="Typography.Body">Strategic initiatives across PlatformOps teams.</FluentTypography>
+
+<FluentStack Orientation="Orientation.Horizontal" Style="margin: 20px 0;">
+    <FluentButton IconStart="@(new Icons.Regular.Size16.Add())" Appearance="Appearance.Accent">New Epic</FluentButton>
+    <FluentSpacer />
+    <FluentSearch Placeholder="Search epics..." Style="width: 300px;" />
+</FluentStack>
+
+<FluentDataGrid Items="@epics" ResizableColumns="true" Pagination="@pagination">
+    <PropertyColumn Property="@(p => p.Id)" Title="ID" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Title)" Title="Title" Sortable="true" />
+    <TemplateColumn Title="Team">
+        <FluentBadge Appearance="Appearance.Neutral">@context.Team.Name</FluentBadge>
+    </TemplateColumn>
+    <TemplateColumn Title="Status" Sortable="true">
+        <FluentBadge Appearance="@GetStatusAppearance(context.Status)">@context.Status</FluentBadge>
+    </TemplateColumn>
+    <PropertyColumn Property="@(p => p.CreatedAt)" Title="Created" Format="dd/MM/yyyy" Sortable="true" />
+    <TemplateColumn Title="Actions">
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Stealth" />
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Open())" Appearance="Appearance.Stealth" />
+    </TemplateColumn>
+</FluentDataGrid>
+
+<FluentPaginator State="@pagination" />
+
+@code {
+    private IQueryable<PlatformOpsHub.Domain.Entities.Epic>? epics;
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    protected override void OnInitialized()
+    {
+        epics = Context.Epics.Include(e => e.Team).AsQueryable();
+    }
+
+    private Appearance GetStatusAppearance(EpicStatus status) => status switch
+    {
+        EpicStatus.Done => Appearance.Accent,
+        EpicStatus.InProgress => Appearance.Accent,
+        EpicStatus.Blocked => Appearance.Neutral,
+        _ => Appearance.Neutral
+    };
+}
