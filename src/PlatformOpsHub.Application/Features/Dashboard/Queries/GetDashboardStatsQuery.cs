@@ -66,7 +66,16 @@ public class GetDashboardStatsQueryHandler : IRequestHandler<GetDashboardStatsQu
             NewBugsCount = latestQuality.Sum(s => s.Bugs),
             NewVulnerabilitiesCount = latestQuality.Sum(s => s.Vulns),
             AverageCodeCoverage = latestQuality.Any() ? (double)latestQuality.Average(s => s.CoveragePct ?? 0m) : 0,
+            CheckmarxCritical = 0,
+            CheckmarxHigh = 0,
+            CheckmarxMedium = 45,
+            CheckmarxLow = 250,
+            SonarQualityGateStatus = "Passed",
             
+            ProdDeploymentTime = "14m 22s",
+            RegressionTimeTakenMinutes = 18,
+            ImpactedPRsCount = 12,
+
             MeanTimeToRecoverHours = 2.4,
             LeadTimeDays = 5.2,
             ChangeFailureRatePercentage = 8.5,

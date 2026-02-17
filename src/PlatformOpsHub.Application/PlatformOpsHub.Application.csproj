@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PlatformOpsHub.Domain\PlatformOpsHub.Domain.csproj" />
     <ProjectReference Include="..\PlatformOpsHub.Infrastructure\PlatformOpsHub.Infrastructure.csproj" />
+    <ProjectReference Include="..\PlatformOpsHub.Integrations\PlatformOpsHub.Integrations.csproj" />
   </ItemGroup>
 
 </Project>

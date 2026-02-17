@@ -1,0 +1,44 @@
+@page
+@model DbaHubModel
+@{
+    ViewData["Title"] = "DBA Hub";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">DBA Hub</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">Database maintenance, health checks, and optimization tasks.</p>
+    </div>
+
+    <div class="glass-card animate-fade">
+        <h3 style="margin-top: 0;">Planned Maintenance</h3>
+        <table style="width: 100%; border-collapse: collapse; color: var(--text-main); margin-top: 1.5rem;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Instance / Database</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Task</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Schedule</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.MaintenanceTasks)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1rem;">
+                            <div style="font-weight: 600;">@task.Instance</div>
+                            <div style="font-size: 0.8rem; color: var(--text-dim);">@task.Database</div>
+                        </td>
+                        <td style="padding: 1rem;">@task.TaskType</td>
+                        <td style="padding: 1rem; color: var(--text-dim);">@task.PlannedAt.ToString("MMM dd, HH:mm")</td>
+                        <td style="padding: 1rem;">
+                            <span class="badge @(task.IsCompleted ? "badge-success" : "badge-warning")">
+                                @(task.IsCompleted ? "Completed" : "Scheduled")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

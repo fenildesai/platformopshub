@@ -1,0 +1,49 @@
+@page
+@model ActivitiesModel
+@{
+    ViewData["Title"] = "Activities";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">Recent Activities</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">Track deployments, tasks, and system events.</p>
+    </div>
+
+    <div class="glass-card animate-fade">
+        <table style="width: 100%; border-collapse: collapse; color: var(--text-main);">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Activity</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Team</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Owner</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Status</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Due</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var activity in Model.Activities)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; cursor: pointer;" onclick="window.location.href='/ActivityDetail/@activity.Id'" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1rem;">
+                            <div style="font-weight: 600;">@activity.Title</div>
+                            <div style="font-size: 0.8rem; color: var(--text-dim);">@activity.Description</div>
+                        </td>
+                        <td style="padding: 1rem;">
+                            <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--text-dim);">@activity.TeamName</span>
+                        </td>
+                        <td style="padding: 1rem;">@activity.OwnerName</td>
+                        <td style="padding: 1rem;">
+                            <span class="badge @(activity.Status == PlatformOpsHub.Domain.Enums.EpicStatus.Done ? "badge-success" : activity.Status == PlatformOpsHub.Domain.Enums.EpicStatus.InProgress ? "badge-accent" : "badge-warning")">
+                                @activity.Status
+                            </span>
+                        </td>
+                        <td style="padding: 1rem; color: var(--text-dim);">
+                            @(activity.DueAt?.ToString("MMM dd, yyyy") ?? "-")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

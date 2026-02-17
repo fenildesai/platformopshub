@@ -1,0 +1,123 @@
+@page
+@model LeaderboardModel
+@{
+    ViewData["Title"] = "Appreciation Leaderboard";
+}
+
+<div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <div class="animate-fade" style="text-align: center; margin-bottom: 4rem;">
+        <h1 style="margin: 0; font-weight: 800; font-size: 3.5rem; background: var(--gradient-premium); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -2px;">The Elite Leaderboard</h1>
+        <p style="color: var(--text-dim); font-size: 1.25rem; margin-top: 0.5rem;">Consistency is key. Track your progress and climb the ranks.</p>
+    </div>
+
+    <!-- Rule Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem;">
+        <div class="glass-card animate-fade" style="background: rgba(10, 132, 255, 0.05); border: 1px solid rgba(10, 132, 255, 0.2);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="background: var(--primary); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fab fa-jira" style="color: white;"></i>
+                </div>
+                <h3 style="margin: 0;">Daily Jira Updates</h3>
+            </div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Maintain your streak! Update at least one ticket daily to earn **10 points**. Automated via Jira Webhooks.</p>
+            <div style="font-weight: 700; color: var(--primary);">+10 Points / Day</div>
+        </div>
+
+        <div class="glass-card animate-fade" style="background: rgba(48, 209, 88, 0.05); border: 1px solid rgba(48, 209, 88, 0.2); animation-delay: 0.1s;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="background: #30d158; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-sync" style="color: white;"></i>
+                </div>
+                <h3 style="margin: 0;">Running Scrum</h3>
+            </div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Consistent standups and sprint management. High activity during standup hours earns the team **10 points**.</p>
+            <div style="font-weight: 700; color: #30d158;">+10 Points / Event</div>
+        </div>
+    </div>
+
+    <!-- Podium -->
+    @if (Model.Leaderboard.Count >= 3)
+    {
+        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 2.5rem; margin-bottom: 5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-glass);" class="animate-fade">
+            <!-- Rank 2 -->
+            <div style="text-align: center; width: 180px;">
+                <div style="width: 100px; height: 100px; border-radius: 30px; background: rgba(255,255,255,0.05); margin: 0 auto 1.5rem; border: 2px solid #C0C0C0; position: relative; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 80%; height: 80%; border-radius: 20px; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.8rem;">@string.Concat(Model.Leaderboard[1].DisplayName.Split(' ').Select(n => n[0]))</div>
+                    <div style="position: absolute; top: -10px; right: -10px; background: #C0C0C0; color: #1a1a1a; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem;">2</div>
+                </div>
+                <div style="font-weight: 800; font-size: 1.2rem;">@Model.Leaderboard[1].DisplayName</div>
+                <div style="color: var(--accent); font-weight: 800; font-size: 1.4rem; margin-top: 0.5rem;">@Model.Leaderboard[1].Points</div>
+                <div class="stat-label" style="font-size: 0.7rem;">TOTAL POINTS</div>
+            </div>
+
+            <!-- Rank 1 -->
+            <div style="text-align: center; width: 220px;">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: drop-shadow(0 0 15px #ffd60a);">👑</div>
+                <div style="width: 140px; height: 140px; border-radius: 40px; background: rgba(255,214,10,0.1); margin: 0 auto 1.5rem; border: 3px solid #ffd60a; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(255,214,10,0.2);">
+                    <div style="width: 80%; height: 80%; border-radius: 25px; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 2.5rem;">@string.Concat(Model.Leaderboard[0].DisplayName.Split(' ').Select(n => n[0]))</div>
+                    <div style="position: absolute; top: -10px; right: -10px; background: #ffd60a; color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem;">1</div>
+                </div>
+                <div style="font-weight: 900; font-size: 1.5rem;">@Model.Leaderboard[0].DisplayName</div>
+                <div style="color: #ffd60a; font-weight: 900; font-size: 2rem; margin-top: 0.5rem;">@Model.Leaderboard[0].Points</div>
+                <div class="stat-label" style="font-size: 0.8rem;">CHAMPION</div>
+            </div>
+
+            <!-- Rank 3 -->
+            <div style="text-align: center; width: 180px;">
+                <div style="width: 100px; height: 100px; border-radius: 30px; background: rgba(255,255,255,0.05); margin: 0 auto 1.5rem; border: 2px solid #cd7f32; position: relative; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 80%; height: 80%; border-radius: 20px; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.8rem;">@string.Concat(Model.Leaderboard[2].DisplayName.Split(' ').Select(n => n[0]))</div>
+                    <div style="position: absolute; top: -10px; right: -10px; background: #cd7f32; color: #1a1a1a; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem;">3</div>
+                </div>
+                <div style="font-weight: 800; font-size: 1.2rem;">@Model.Leaderboard[2].DisplayName</div>
+                <div style="color: var(--accent); font-weight: 800; font-size: 1.4rem; margin-top: 0.5rem;">@Model.Leaderboard[2].Points</div>
+                <div class="stat-label" style="font-size: 0.7rem;">TOTAL POINTS</div>
+            </div>
+        </div>
+    }
+
+    <div class="glass-card animate-fade">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1.2rem; text-align: left;" class="stat-label">Rank</th>
+                    <th style="padding: 1.2rem; text-align: left;" class="stat-label">Person</th>
+                    <th style="padding: 1.2rem; text-align: left;" class="stat-label">Streak</th>
+                    <th style="padding: 1.2rem; text-align: right;" class="stat-label">Kudos</th>
+                    <th style="padding: 1.2rem; text-align: right;" class="stat-label">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Leaderboard.Count; i++)
+                {
+                    var entry = Model.Leaderboard[i];
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.5rem 1.2rem; font-weight: 800; font-size: 1.1rem; color: var(--text-dim);">
+                            @if(i < 3) { <span style="color: var(--accent);">★</span> }
+                            else { <span>#@(i+1)</span> }
+                        </td>
+                        <td style="padding: 1.5rem 1.2rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800;">
+                                    @string.Concat(entry.DisplayName.Split(' ').Select(n => n[0]))
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700;">@entry.DisplayName</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-dim);">@entry.TeamName</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 1.5rem 1.2rem;">
+                            <div style="display: flex; align-items: center; gap: 0.4rem; color: #ffd60a; font-weight: 700;">
+                                <i class="fas fa-fire"></i> @(new Random().Next(2, 12))d
+                            </div>
+                        </td>
+                        <td style="padding: 1.5rem 1.2rem; text-align: right;">
+                            <span class="badge badge-accent">❤️ @entry.KudosReceivedCount</span>
+                        </td>
+                        <td style="padding: 1.5rem 1.2rem; text-align: right; font-weight: 900; font-size: 1.3rem; color: var(--text-main);">@entry.Points</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

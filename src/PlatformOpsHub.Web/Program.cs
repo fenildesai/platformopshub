@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.FluentUI.AspNetCore.Components;
 using PlatformOpsHub.Infrastructure.Data;
 using PlatformOpsHub.Infrastructure.Seed;
 using PlatformOpsHub.Integrations.Configuration;
@@ -14,10 +11,8 @@ using PlatformOpsHub.Background.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorPages();
 
-builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 
 // Application Layer
@@ -26,8 +21,6 @@ builder.Services.AddApplication();
 // Background Jobs
 builder.Services.AddPlatformOpsBackground("App_Data/hangfire.db");
 
-// Fluent UI Blazor
-builder.Services.AddFluentUIComponents();
 
 // Database - SQLite with path resolution for Azure App Service
 var dbPath = builder.Environment.IsProduction()
@@ -124,7 +117,6 @@ app.UseAuthorization();
 // Background Jobs
 app.UsePlatformOpsBackground();
 
-app.MapRazorComponents<PlatformOpsHub.Web.Components.App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorPages();
 
 app.Run();

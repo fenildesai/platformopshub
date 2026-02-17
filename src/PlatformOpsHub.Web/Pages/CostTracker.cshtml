@@ -1,0 +1,42 @@
+@page
+@model CostTrackerModel
+@{
+    ViewData["Title"] = "Cost Optimization Tracker";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">Cost Optimization Tracker</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">Tracking initiatives driving platform cost efficiency and ROI.</p>
+    </div>
+
+    <div class="glass-card animate-fade">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Initiative</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Description</th>
+                    <th style="padding: 1rem; text-align: left;" class="stat-label">Owner</th>
+                    <th style="padding: 1rem; text-align: right;" class="stat-label">Est. Annual Savings</th>
+                    <th style="padding: 1rem; text-align: right;" class="stat-label">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.WorkItems)
+                {
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; cursor: pointer;" onclick="window.location.href='/ActivityDetail/@item.Id'" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.5rem 1rem; font-weight: 700;">@item.Title</td>
+                        <td style="padding: 1.5rem 1rem; color: var(--text-dim); max-width: 400px;">@item.Description</td>
+                        <td style="padding: 1.5rem 1rem; font-weight: 600;">@item.OwnerName</td>
+                        <td style="padding: 1.5rem 1rem; text-align: right; font-weight: 800; color: #30d158;">
+                            £@((new Random().Next(5000, 50000)).ToString("N0"))
+                        </td>
+                        <td style="padding: 1.5rem 1rem; text-align: right;">
+                            <span class="badge badge-accent">@item.Status</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

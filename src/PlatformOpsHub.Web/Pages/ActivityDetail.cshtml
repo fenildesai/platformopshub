@@ -1,0 +1,59 @@
+@page "{id:int}"
+@model ActivityDetailModel
+@{
+    ViewData["Title"] = Model.Activity?.Title ?? "Activity Details";
+}
+
+@if (Model.Activity == null)
+{
+    <div style="padding: 2rem; text-align: center;">
+        <h2 style="color: var(--text-dim);">Activity not found.</h2>
+        <a href="/Activities" class="btn-premium" style="display: inline-block; margin-top: 1rem; text-decoration: none;">Back to List</a>
+    </div>
+}
+else
+{
+    <div style="padding: 2rem; max-width: 1000px; margin: 0 auto;">
+        <div class="animate-fade" style="margin-bottom: 2rem;">
+            <a href="/Activities" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;">← Back to Activities</a>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 1rem;">
+                <div>
+                    <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">@Model.Activity.Title</h1>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; align-items: center;">
+                        <span class="badge" style="background: var(--gradient-premium); color: white;">@Model.Activity.TeamName</span>
+                        <span class="badge badge-accent">@Model.Activity.Status</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card animate-fade">
+            <h3 style="margin-top: 0;">Description</h3>
+            <p style="color: var(--text-dim); line-height: 1.6; font-size: 1.1rem;">@Model.Activity.Description</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; border-top: 1px solid var(--border-glass); padding-top: 2rem;">
+                <div>
+                    <div class="stat-label">Owner</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-top: 0.5rem;">@Model.Activity.OwnerName</div>
+                </div>
+                <div>
+                    <div class="stat-label">Due Date</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-top: 0.5rem;">@(Model.Activity.DueAt?.ToString("MMM dd, yyyy") ?? "Not set")</div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Activity.Tags))
+        {
+            <div style="margin-top: 2rem;">
+                <div class="stat-label">Tags</div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                    @foreach (var tag in Model.Activity.Tags.Split(','))
+                    {
+                        <span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-dim);">@tag.Trim()</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

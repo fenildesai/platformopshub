@@ -1,0 +1,50 @@
+@page
+@model CodeQualityModel
+@{
+    ViewData["Title"] = "Code Quality & Security";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">Code Quality & Security</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">SonarQube and Security scan results across platform projects.</p>
+    </div>
+
+    <div class="grid-cols-4" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+        @foreach (var quality in Model.QualitySummaries)
+        {
+            <div class="glass-card animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                    <div>
+                        <div class="stat-label">Project</div>
+                        <div style="font-size: 1.2rem; font-weight: 700;">@quality.ProjectKey</div>
+                    </div>
+                    <span class="badge @(quality.Status == "Passing" ? "badge-success" : "badge-warning")" style="padding: 0.5rem 1rem;">
+                        @quality.Status
+                    </span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div style="background: rgba(255,69,58,0.1); border-radius: 8px; padding: 1rem; border-left: 3px solid #ff453a;">
+                        <div style="color: #ff453a; font-size: 1.5rem; font-weight: 700;">@quality.Bugs</div>
+                        <div class="stat-label" style="font-size: 0.7rem;">Bugs</div>
+                    </div>
+                    <div style="background: rgba(255,214,10,0.1); border-radius: 8px; padding: 1rem; border-left: 3px solid #ffd60a;">
+                        <div style="color: #ffd60a; font-size: 1.5rem; font-weight: 700;">@quality.Vulnerabilities</div>
+                        <div class="stat-label" style="font-size: 0.7rem;">Vulns</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span class="stat-label" style="font-size: 0.7rem;">Coverage</span>
+                        <span style="font-weight: 600;">@quality.CoveragePct.ToString("F1")%</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: @quality.CoveragePct%; height: 100%; background: @(quality.CoveragePct > 80 ? "#30d158" : quality.CoveragePct > 60 ? "#ffd60a" : "#ff453a");"></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

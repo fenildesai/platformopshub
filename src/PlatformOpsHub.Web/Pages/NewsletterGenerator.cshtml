@@ -1,0 +1,99 @@
+@page
+@model NewsletterGeneratorModel
+@{
+    ViewData["Title"] = "AI Newsletter Generator";
+}
+
+<div style="padding: 2rem; max-width: 900px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column;">
+    <div class="animate-fade" style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">AI Editorial Assistant</h1>
+        <p style="color: var(--text-dim);">Tell me what period to cover, and I'll draft a premium newsletter for you.</p>
+    </div>
+
+    <div class="glass-card animate-fade" style="flex: 1; display: flex; flex-direction: column; padding: 0; overflow: hidden; background: rgba(0,0,0,0.2);">
+        <!-- Chat History Area -->
+        <div id="chat-area" style="flex: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem;">
+            <div style="display: flex; gap: 1rem; max-width: 80%;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-robot" style="color: white; font-size: 0.9rem;"></i>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 0 15px 15px 15px; border: 1px solid var(--border-glass); font-size: 0.95rem; line-height: 1.5;">
+                    Hello! I'm ready to help you draft the next PlatformOps Insider. Should we look at the **Weekly** highlights or the **Monthly** summary?
+                </div>
+            </div>
+
+            @if (Model.GeneratedMarkdown != null)
+            {
+                <div style="display: flex; gap: 1rem; max-width: 80%; align-self: flex-start;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-robot" style="color: white; font-size: 0.9rem;"></i>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0 15px 15px 15px; border: 1px solid var(--border-glass); font-size: 0.95rem; line-height: 1.6; color: var(--text-main);">
+                        <div style="font-weight: 800; margin-bottom: 1rem; color: var(--accent);">PREVIEW GENERATED:</div>
+                        <div style="white-space: pre-wrap; font-family: 'Inter', sans-serif;">@Model.GeneratedMarkdown</div>
+                        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                            <a href="/Newsletters" class="btn-premium" style="text-decoration: none; font-size: 0.8rem;">Publish to Hub</a>
+                            <button class="btn-premium" style="background: transparent; border: 1px solid var(--border-glass); font-size: 0.8rem;" onclick="window.location.reload()">Discard</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Input Area -->
+        <div style="padding: 1.5rem; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border-glass);">
+            <form method="post" asp-page-handler="Generate" id="gen-form">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <select asp-for="Request.Period" class="glass-input" style="width: auto; padding: 0.8rem 2rem;">
+                        <option value="Weekly">Weekly Newsletter</option>
+                        <option value="Monthly">Monthly Newsletter</option>
+                    </select>
+                    <input type="text" asp-for="Request.CustomPrompt" placeholder="Add custom context (e.g. Mention the successful Azure migration...)" class="glass-input" style="flex: 1;" />
+                </div>
+                <button type="submit" class="btn-premium" style="width: 100%; justify-content: center; font-weight: 700; height: 50px;">
+                    <span id="btn-text">Generate Newsletter with AI</span>
+                    <i class="fas fa-paper-plane" style="margin-left: 0.8rem;"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('gen-form').onsubmit = function() {
+        document.getElementById('btn-text').innerText = 'AI is dreaming up your content...';
+        document.getElementById('chat-area').innerHTML += `
+            <div style="display: flex; gap: 1rem; max-width: 80%; align-self: flex-end;">
+                <div style="background: var(--primary); color: white; padding: 1rem; border-radius: 15px 15px 0 15px; font-size: 0.95rem;">
+                    Generate the ${document.querySelector('select').value} newsletter please.
+                </div>
+            </div>
+            <div id="loading-bubble" style="display: flex; gap: 1rem; max-width: 80%; margin-top: 1rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-premium); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-robot" style="color: white; font-size: 0.9rem;"></i>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 0 15px 15px 15px; border: 1px solid var(--border-glass); font-style: italic; color: var(--text-dim);">
+                    Thinking... aggregating your weekly performance data...
+                </div>
+            </div>
+        `;
+        document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight;
+    };
+</script>
+
+<style>
+    .glass-input {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-glass);
+        border-radius: 12px;
+        color: white;
+        padding: 0.8rem 1.2rem;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s;
+    }
+    .glass-input:focus {
+        border-color: var(--primary);
+        background: rgba(255,255,255,0.1);
+    }
+</style>

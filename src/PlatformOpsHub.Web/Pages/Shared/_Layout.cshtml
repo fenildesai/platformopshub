@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PlatformOps Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/design-system.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="premium-header">
+        <div class="logo" onclick="window.location.href='/Index'" style="cursor: pointer;">PlatformOps HUB</div>
+        <nav>
+            <a class="nav-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("Index") == true ? "active" : "")" asp-page="/Index">Dashboard</a>
+            <div class="nav-dropdown">
+                <span class="nav-link">Hubs</span>
+                <div class="dropdown-content">
+                    <a asp-page="/ServiceTeamHub">Service Team</a>
+                    <a asp-page="/ChangeTeamHub">Change Team</a>
+                    <a asp-page="/DbaHub">DBA Hub</a>
+                </div>
+            </div>
+            <a class="nav-link @(ViewContext.HttpContext.Request.Path == "/Activities" ? "active" : "")" asp-page="/Activities">Activities</a>
+            <a class="nav-link @(ViewContext.HttpContext.Request.Path == "/Epics" ? "active" : "")" asp-page="/Epics">Epics</a>
+            <a class="nav-link @(ViewContext.HttpContext.Request.Path == "/Newsletters" ? "active" : "")" asp-page="/Newsletters">Newsletters</a>
+            <a class="nav-link @(ViewContext.HttpContext.Request.Path == "/WhoWeAre" ? "active" : "")" asp-page="/WhoWeAre">Who We Are</a>
+            <a class="nav-link @(ViewContext.HttpContext.Request.Path == "/Leaderboard" ? "active" : "")" asp-page="/Leaderboard">Leaderboard</a>
+            <button class="btn-premium" style="margin-left: 2rem;" onclick="alert('Login integration coming soon!')">Log In</button>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

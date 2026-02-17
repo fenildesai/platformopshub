@@ -1,0 +1,52 @@
+@page
+@model NewslettersModel
+@{
+    ViewData["Title"] = "PlatformOps Newsletters";
+}
+
+<div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <div class="animate-fade" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+        <div>
+            <h1 style="margin: 0; font-weight: 800; font-size: 3rem; background: var(--gradient-premium); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -2px;">PlatformOps Insider</h1>
+            <p style="color: var(--text-dim); font-size: 1.25rem; margin-top: 0.5rem;">Your source of truth for weekly and monthly platform updates.</p>
+        </div>
+        <a href="/NewsletterGenerator" class="btn-premium" style="text-decoration: none; display: flex; align-items: center; gap: 0.8rem;">
+            <i class="fas fa-magic"></i> Generate New
+        </a>
+    </div>
+
+    @if (!Model.Newsletters.Any())
+    {
+        <div class="glass-card animate-fade" style="text-align: center; padding: 4rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.2;">📰</div>
+            <h3 style="color: var(--text-dim);">No newsletters found.</h3>
+            <p style="color: var(--text-dim);">Use the generator to create your first AI-driven update.</p>
+        </div>
+    }
+    else
+    {
+        <div class="grid-cols-4" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+            @foreach (var news in Model.Newsletters)
+            {
+                <div class="glass-card animate-fade" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="badge" style="background: @(news.Period == PlatformOpsHub.Domain.Enums.NewsletterPeriod.Weekly ? "rgba(10, 132, 255, 0.1)" : "rgba(48, 209, 88, 0.1)"); color: @(news.Period == PlatformOpsHub.Domain.Enums.NewsletterPeriod.Weekly ? "#0a84ff" : "#30d158"); border: 1px solid rgba(255,255,255,0.1);">
+                            @news.Period
+                        </span>
+                        <span class="stat-label" style="font-size: 0.75rem;">@news.CreatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    
+                    <h3 style="margin: 0.5rem 0 0 0; font-weight: 800;">@news.Period Edition</h3>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; flex: 1;">
+                        Coverage for @news.RangeStart.ToString("MMMM dd") - @news.RangeEnd.ToString("MMMM dd, yyyy").
+                    </p>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn-premium" style="flex: 1; padding: 0.6rem; font-size: 0.8rem;">Read Now</button>
+                        <button class="btn-premium" style="background: rgba(255,255,255,0.05); flex: 1; padding: 0.6rem; font-size: 0.8rem; border: 1px solid var(--border-glass);">Share</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

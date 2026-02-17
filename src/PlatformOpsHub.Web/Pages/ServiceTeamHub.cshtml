@@ -1,0 +1,43 @@
+@page
+@model ServiceTeamHubModel
+@{
+    ViewData["Title"] = "Service Team Hub";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">Service Team Hub</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">Overview of platform engineering and service reliability activities.</p>
+    </div>
+
+    <div class="grid-cols-4">
+        <div class="glass-card animate-fade" style="border-left: 4px solid var(--primary);">
+            <div class="stat-label">Active Sprints</div>
+            <div class="stat-value">3</div>
+        </div>
+        <div class="glass-card animate-fade" style="border-left: 4px solid #30d158; animation-delay: 0.1s;">
+            <div class="stat-label">Cycle Time</div>
+            <div class="stat-value">4.2d</div>
+        </div>
+        <div class="glass-card animate-fade" style="border-left: 4px solid #ffd60a; animation-delay: 0.2s;">
+            <div class="stat-label">Open Bugs</div>
+            <div class="stat-value">12</div>
+        </div>
+    </div>
+
+    <div class="glass-card animate-fade" style="margin-top: 2rem;">
+        <h3 style="margin-top: 0;">Service Reliability Metrics</h3>
+        <p style="color: var(--text-dim);">Monitoring service health and team performance over time.</p>
+        <div style="height: 200px; display: flex; align-items: flex-end; gap: 1rem; padding-top: 2rem;">
+            @for (int i = 0; i < 12; i++)
+            {
+                var h = new Random().Next(40, 100);
+                <div style="flex: 1; background: linear-gradient(to top, var(--primary), var(--accent)); height: @h%; border-radius: 4px 4px 0 0; opacity: 0.8;"></div>
+            }
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;" class="stat-label">
+            <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
+            <span>JUL</span><span>AUG</span><span>SEP</span><span>OCT</span><span>NOV</span><span>DEC</span>
+        </div>
+    </div>
+</div>

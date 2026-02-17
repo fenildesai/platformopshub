@@ -1,0 +1,164 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Operations Dashboard";
+}
+
+<div style="padding: 2rem;">
+    <div class="animate-fade">
+        <h1 style="margin: 0; font-weight: 800; font-size: 2.5rem;">Operations Dashboard</h1>
+        <p style="color: var(--text-dim); margin-bottom: 2rem;">Real-time overview of PlatformOps activities and KPIs.</p>
+    </div>
+
+    <div class="grid-cols-4">
+        <!-- Epics Status -->
+        <a href="/Epics" style="text-decoration: none; color: inherit;">
+            <div class="glass-card animate-fade" style="animation-delay: 0.1s;">
+                <div class="stat-label">Epics Status</div>
+                <div class="stat-value">@Model.Stats.InProgressEpics</div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-accent">@Model.Stats.BacklogEpics Backlog</span>
+                    <span class="badge badge-success">@Model.Stats.DoneEpics Done</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Deployments -->
+        <a href="/Activities" style="text-decoration: none; color: inherit;">
+            <div class="glass-card animate-fade" style="animation-delay: 0.2s;">
+                <div class="stat-label">Deployments (Weekly)</div>
+                <div class="stat-value">@Model.Stats.DeploymentsThisWeek</div>
+                <div style="color: var(--text-dim); font-size: 0.85rem;">
+                    Regression Pass: <span style="color: #30d158;">@Model.Stats.NightlyRegressionPassRate.ToString("F1")%</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- Pipeline Health -->
+        <div class="glass-card animate-fade" style="animation-delay: 0.3s;">
+            <div class="stat-label">Pipeline Health</div>
+            <div class="stat-value" style="color: #30d158;">@Model.Stats.PipelineHealthPercentage%</div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 1rem; overflow: hidden;">
+                <div style="width: @Model.Stats.PipelineHealthPercentage%; height: 100%; background: #30d158; box-shadow: 0 0 10px #30d158;"></div>
+            </div>
+        </div>
+
+        <!-- Cost vs Target -->
+        <a href="/CostTracker" style="text-decoration: none; color: inherit;">
+            <div class="glass-card animate-fade" style="animation-delay: 0.4s; border-left: 4px solid @(Model.Stats.CostVariance >= 0 ? "#30d158" : "#ff453a");">
+                <div class="stat-label">Cost YTD (2026)</div>
+                <div class="stat-value" style="font-size: 1.8rem;">£@Model.Stats.CostYTD.ToString("N0")</div>
+                <div style="color: var(--text-dim); font-size: 0.85rem;">
+                    Target: £@Model.Stats.AnnualCostTarget.ToString("N0")
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="grid-cols-4" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+        <!-- Code Quality -->
+        <a href="/CodeQuality" style="text-decoration: none; color: inherit;">
+            <div class="glass-card animate-fade" style="animation-delay: 0.5s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0;">Code Quality & Security</h3>
+                    <div class="badge @(Model.Stats.SonarQualityGateStatus == "Passed" ? "badge-success" : "badge-warning")">Sonar: @Model.Stats.SonarQualityGateStatus</div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <div class="stat-label" style="font-size: 0.75rem; margin-bottom: 0.5rem;">Checkmarx Issues</div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <div style="text-align: center; flex: 1; background: rgba(255,69,58,0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,69,58,0.2);">
+                                <div style="color: #ff453a; font-weight: 800;">@Model.Stats.CheckmarxCritical</div>
+                                <div style="font-size: 0.6rem; color: var(--text-dim);">Crit</div>
+                            </div>
+                            <div style="text-align: center; flex: 1; background: rgba(255,159,10,0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,159,10,0.2);">
+                                <div style="color: #ff9f0a; font-weight: 800;">@Model.Stats.CheckmarxHigh</div>
+                                <div style="font-size: 0.6rem; color: var(--text-dim);">High</div>
+                            </div>
+                            <div style="text-align: center; flex: 1; background: rgba(255,214,10,0.1); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,214,10,0.2);">
+                                <div style="color: #ffd60a; font-weight: 800;">@Model.Stats.CheckmarxMedium</div>
+                                <div style="font-size: 0.6rem; color: var(--text-dim);">Med</div>
+                            </div>
+                            <div style="text-align: center; flex: 1; background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="color: var(--text-main); font-weight: 800;">@Model.Stats.CheckmarxLow</div>
+                                <div style="font-size: 0.6rem; color: var(--text-dim);">Low</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border-left: 1px solid var(--border-glass); padding-left: 1.5rem;">
+                        <div class="stat-label" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Unit Coverage</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">@Model.Stats.AverageCodeCoverage.ToString("F1")%</div>
+                        <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 0.5rem;">
+                            <div style="width: @Model.Stats.AverageCodeCoverage%; height: 100%; background: var(--primary); border-radius: 2px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <!-- Deployment Analytics -->
+        <div class="glass-card animate-fade" style="animation-delay: 0.6s;">
+            <h3 style="margin-top: 0;">Deployment & Regression</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                <div style="background: rgba(48, 209, 88, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(48, 209, 88, 0.1);">
+                    <div class="stat-label" style="font-size: 0.7rem;">Prod Deploy Time</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-top: 0.3rem;">@Model.Stats.ProdDeploymentTime</div>
+                </div>
+                <div style="background: rgba(10, 132, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(10, 132, 255, 0.1);">
+                    <div class="stat-label" style="font-size: 0.7rem;">Regression Duration</div>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin-top: 0.3rem;">@Model.Stats.RegressionTimeTakenMinutes m</div>
+                </div>
+                <div style="background: rgba(191, 90, 242, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(191, 90, 242, 0.1); grid-column: span 2; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="stat-label" style="font-size: 0.7rem;">Impacted PRs (Daily)</div>
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-top: 0.3rem;">@Model.Stats.ImpactedPRsCount</div>
+                    </div>
+                    <i class="fas fa-code-branch" style="color: var(--accent); font-size: 1.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Hubs Access -->
+    <div style="margin-top: 3rem;">
+        <h2 style="font-weight: 800; font-size: 1.8rem;">Quick Hubs</h2>
+        <div class="grid-cols-4" style="padding: 1rem 0;">
+            <a href="/ServiceTeamHub" style="text-decoration: none; color: inherit;">
+                <div class="glass-card animate-fade" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="background: var(--gradient-premium); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-users" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">Service Team</div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim);">Platform Eng & SRE</div>
+                    </div>
+                </div>
+            </a>
+            <a href="/DbaHub" style="text-decoration: none; color: inherit;">
+                <div class="glass-card animate-fade" style="display: flex; align-items: center; gap: 1rem; animation-delay: 0.1s;">
+                    <div style="background: linear-gradient(135deg, #30d158 0%, #248a3d 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-database" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700;">DBA Hub</div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim);">Maintenance & Health</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="glass-card animate-fade" style="animation-delay: 0.7s; border: 1px solid rgba(191, 90, 242, 0.3); background: rgba(191, 90, 242, 0.05); margin: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-magic" style="color: var(--accent); font-size: 1.5rem;"></i>
+            <div>
+                <strong style="color: var(--accent);">AI Strategic Insight:</strong>
+                <span style="color: var(--text-main); margin-left: 0.5rem;">
+                    Build times are down 15% this week. Cost is trending well against the 2026 target. Recommended focus: 2 critical security issues in platform-web.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,6 +12,9 @@ public record DashboardStatsDto
     // Deployment Stats
     public int DeploymentsThisWeek { get; init; }
     public double NightlyRegressionPassRate { get; init; }
+    public string? ProdDeploymentTime { get; init; }
+    public int RegressionTimeTakenMinutes { get; init; }
+    public int ImpactedPRsCount { get; init; }
 
     // Pipeline Stats
     public double PipelineHealthPercentage { get; init; }
@@ -25,6 +28,11 @@ public record DashboardStatsDto
     public int NewBugsCount { get; init; }
     public int NewVulnerabilitiesCount { get; init; }
     public double AverageCodeCoverage { get; init; }
+    public int CheckmarxCritical { get; init; }
+    public int CheckmarxHigh { get; init; }
+    public int CheckmarxMedium { get; init; }
+    public int CheckmarxLow { get; init; }
+    public string? SonarQualityGateStatus { get; init; }
 
     // DORA Metrics
     public double MeanTimeToRecoverHours { get; init; }
@@ -34,22 +42,4 @@ public record DashboardStatsDto
     // Team Activities
     public int GenAIInitiativesCount { get; init; }
     public int DbaMaintenanceBacklogCount { get; init; }
-}
-
-public record EpicDto
-{
-    public int Id { get; init; }
-    public string Title { get; init; } = string.Empty;
-    public string Status { get; init; } = string.Empty;
-    public string TeamName { get; init; } = string.Empty;
-    public DateTime CreatedAt { get; init; }
-}
-
-public record ActivityDto
-{
-    public int Id { get; init; }
-    public string Title { get; init; } = string.Empty;
-    public string Status { get; init; } = string.Empty;
-    public string OwnerName { get; init; } = string.Empty;
-    public DateTime? DueAt { get; init; }
 }
